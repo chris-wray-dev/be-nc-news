@@ -26,8 +26,8 @@ exports.seed = function (knex) {
     .then(() => {
       return Promise.all([topicsInsertions, usersInsertions])
         .then(([topics, users]) => {
-          console.log(topics);
-          console.log(users);
+          // console.log(topics);
+          // console.log(users);
         });
     })
     .then(() => {
@@ -37,7 +37,16 @@ exports.seed = function (knex) {
         .returning('*');
     })
     .then(articles => {
-      console.log(articles);
+      const refObj = makeRefObj(articles, 'title', 'article_id');
+      let formattedComments = formatComments(commentData, refObj, 'belongs_to', 'article_id');
+      formattedComments = formatDates(formattedComments);
+      console.log(formattedComments)
+      return knex('comments')
+        .insert(formattedComments)
+        .returning('*');
+    })
+    .then(comments => {
+      console.log(comments);
     })
 
   /* 
