@@ -20,10 +20,6 @@ exports.seed = function (knex) {
     .insert(userData)
     .returning('*');
   
-  const articlesInsertions = knex('articles')
-    .insert(articleData)
-    .returning('*');
-
   return knex.migrate
     .rollback()
     .then(() => knex.migrate.latest())
@@ -33,6 +29,15 @@ exports.seed = function (knex) {
           console.log(topics);
           console.log(users);
         });
+    })
+    .then(() => {
+      const formattedArticleData = formatDates(articleData);
+      return knex('articles')
+        .insert(formattedArticleData)
+        .returning('*');
+    })
+    .then(articles => {
+      console.log(articles);
     })
 
   /* 
