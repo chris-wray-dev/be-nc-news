@@ -19,7 +19,11 @@ exports.seed = function (knex) {
   const usersInsertions = knex('users')
     .insert(userData)
     .returning('*');
-    
+  
+  const articlesInsertions = knex('articles')
+    .insert(articleData)
+    .returning('*');
+
   return knex.migrate
     .rollback()
     .then(() => knex.migrate.latest())
