@@ -55,29 +55,30 @@ describe('/api', () => {
   describe('/articles', () => {
     it('GET /:article_id to return 200 and an object containing article key and an array of article', () => {
       return request(app)
-        .get('/api/articles/4')
+        .get('/api/articles/1')
         .expect(200)
         .then(({ body }) => {
           expect(body).to.be.an('object');
           expect(body).to.contain.keys('article');
-          expect(body.article[0]).contain.keys(
+          expect(body.article).contain.keys(
             'article_id',
             'title',
             'body',
             'votes',
             'topic',
             'author',
-            'created_at'
+            'created_at',
+            'comment_count'
           );
-          expect((body.article[0])).to.eql({
-            article_id: 4,
-            title: 'Student SUES Mitch!',
+          expect((body.article)).to.eql({
+            article_id: 1,
+            title: 'Living in the shadow of a great man',
             topic: 'mitch',
-            votes: 0,
-            author: 'rogersop',
-            body:
-              'We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages',
-            created_at: '2006-11-18T12:21:54.171Z'
+            author: 'butter_bridge',
+            body: 'I find this existence challenging',
+            votes: 100,
+            created_at: '2018-11-15T12:21:54.171Z',
+            comment_count: 13
           });
         });
     });
