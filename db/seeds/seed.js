@@ -40,14 +40,11 @@ exports.seed = function (knex) {
       const refObj = makeRefObj(articles, 'title', 'article_id');
       let formattedComments = formatComments(commentData, refObj, 'belongs_to', 'article_id');
       formattedComments = formatDates(formattedComments);
-      console.log(formattedComments)
       return knex('comments')
         .insert(formattedComments)
         .returning('*');
     })
-    .then(comments => {
-      console.log(comments);
-    })
+
 
   /* 
     

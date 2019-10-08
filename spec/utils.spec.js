@@ -6,8 +6,11 @@ const {
   makeRefObj,
   formatComments,
 } = require('../db/utils/utils');
+const connection = require('../db/connection');
 
 describe('formatDates', () => {
+  beforeEach(() => connection.seed.run());
+  after(() => connection.destroy());
   it('returns an array and passes back a new array', () => {
     const input = [];
     const actual = formatDates(input);
