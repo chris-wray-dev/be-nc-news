@@ -78,7 +78,7 @@ describe('/api', () => {
             body: 'I find this existence challenging',
             votes: 100,
             created_at: '2018-11-15T12:21:54.171Z',
-            comment_count: 13
+            comment_count: '13'
           });
         });
     });
