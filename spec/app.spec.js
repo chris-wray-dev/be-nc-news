@@ -332,4 +332,34 @@ describe('/api', () => {
       });
     });
   });
+  
+  /*
+  ************************ /API/COMMENTS *******************************
+  */
+
+  describe('/comments', () => {
+    it('PATCH /:comment_id expect 202 and an updated comment', () => {
+      return request(app)
+        .patch('/api/comments/1')
+        .send({ inc_votes: 1 })
+        .expect(202)
+        .then(({ body : { comment }}) => {
+          expect(comment).to.contain.keys(
+            'comment_id',
+            'author',
+            'article_id',
+            'votes',
+            'created_at',
+            'body');
+          expect(comment).to.eql({
+            comment_id: 1,
+            article_id: 9,
+            author: 'butter_bridge',
+            body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+            votes: 17, // originally 16
+            created_at: '2017-11-22T12:36:03.389Z'
+          });
+        });
+    });
+  });
 });
