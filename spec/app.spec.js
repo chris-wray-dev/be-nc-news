@@ -361,5 +361,14 @@ describe('/api', () => {
           });
         });
     });
+    it('PATCH /:not_a_comment_id expect 404 and a nice message', () => {
+      return request(app)
+        .patch('/api/comments/123')
+        .send({ inc_votes: 1 })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).to.equal('comment 123 not found!!!')
+        });
+    });
   });
 });
