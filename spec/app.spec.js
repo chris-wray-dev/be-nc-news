@@ -107,11 +107,31 @@ describe('/api', () => {
           expect(articles).to.be.sortedBy('article_id', { ascending: true });
         });
     });
+    it('GET ?author=butter_bridge returns 200 and an array of articles by butter_bridge', () => {
+      return request(app)
+        .get('/api/articles?author=butter_bridge')
+        .expect(200)
+        .then(({ body: { articles }}) => {
+          articles.forEach(article => {
+            expect(article.author).to.equal('butter_bridge');
+          });
+        });
+    });
+    it('GET ?topic=mitch reutrns 200 and an array of articles with the topic mitch', () => {
+      return request(app)
+        .get('/api/articles?topic=mitch')
+        .expect(200)
+        .then(({ body: { articles }}) => {
+          articles.forEach(article => {
+            expect(article.topic).to.equal('mitch');
+          });
+        });
+    });
 
     /*
     ************************** /articles with params *************************
     */
-   
+
     it('GET /:article_id to return 200 and an object containing article key and an array of article', () => {
       return request(app)
         .get('/api/articles/1')
