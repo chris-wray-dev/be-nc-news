@@ -1,5 +1,22 @@
 const connection = require('../db/connection');
 
+exports.selectArticles = ({ sort_by = 'created_at', order = "desc" }) => {
+  return connection
+    .select(
+      'articles.article_id',
+      'articles.title',
+      'articles.votes',
+      'articles.topic',
+      'articles.author',
+      'articles.created_at'
+    )
+    .from('articles')
+    .leftJoin('comments', 'articles.article_id', 'comments.article_id')
+    .groupBy('articles.article_id')
+    .count('comments.comment_id as comment_count')
+    .orderBy(sort_by, order);
+}
+
 exports.selectArticleById = ({ article_id }) => {
   return connection
     .select('articles.*')
@@ -46,4 +63,14 @@ exports.insertComment = ({ article_id }, { username, body }) => {
     .then(comment => {
       return comment[0];
     });
+}
+
+exports.selectComments = ({ sort_by = 'created_at', order = 'desc' }) => {
+  return connection
+    .select('*')
+    .from('comments')
+    .orderBy(sort_by, order)
+    .then(comments => {
+      return comments;
+    })
 }

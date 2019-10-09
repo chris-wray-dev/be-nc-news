@@ -1,8 +1,12 @@
 process.env.NODE_ENV = 'test';
 const { expect } = require('chai');
+const chai = require('chai');
+const chaiSorted = require('chai-sorted');
 const request = require('supertest');
 const connection = require('../db/connection');
 const app = require('../app');
+
+chai.use(chaiSorted);
 
 describe('/api', () => {
   beforeEach(() => connection.seed.run());
@@ -64,6 +68,50 @@ describe('/api', () => {
   */
 
   describe('/articles', () => {
+    it('GET / returns 200 and an array of article objects', () => {
+      return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({ body : { articles }}) => {
+          expect(articles).to.be.an('array');
+          expect(articles[0]).to.contain.keys(
+            'article_id',
+            'title',
+            'votes',
+            'topic',
+            'author',
+            'created_at',
+            'comment_count'
+          );
+          expect(articles).to.be.sortedBy('created_at', { descending: true });
+        });
+    });
+
+    /*
+    ********************* /articles with queries *********************
+    */
+
+    it('GET ?sort_by=author returns an array of articles in descending order by author', () => {
+      return request(app)
+        .get('/api/articles?sort_by=author')
+        .expect(200)
+        .then(({ body: { articles }}) => {
+          expect(articles).to.be.sortedBy('author', { descending: true });
+        });
+    });
+    it('GET ?sort_by=article_id&order=asc returns an array of articles in ascending order by author', () => {
+      return request(app)
+        .get('/api/articles?sort_by=article_id&order=asc')
+        .expect(200)
+        .then(({ body: { articles }}) => {
+          expect(articles).to.be.sortedBy('article_id', { ascending: true });
+        });
+    });
+
+    /*
+    ************************** /articles with params *************************
+    */
+   
     it('GET /:article_id to return 200 and an object containing article key and an array of article', () => {
       return request(app)
         .get('/api/articles/1')
@@ -101,7 +149,7 @@ describe('/api', () => {
           expect(body).to.eql({ msg: 'article 15 not found!!!' });
         });
     });
-    it('PATCH /:article_id takes an object of { incVotes: 2 } to return 202 and return the article object with the vote count increased', () => {
+    it('PATCH /:article_id takes an object of { inc_votes: 0 } to return 202 and return the article object with the vote count increased', () => {
       return request(app)
         .patch('/api/articles/1')
         .send({ inc_votes : -99 })
@@ -141,7 +189,7 @@ describe('/api', () => {
     *************************** /articles/:id/comments ***************************
     */
 
-    describe('/articles/:article_id/comments', () => {
+    describe('/:article_id/comments', () => {
       it('POST /1/comments - returns 201 and a comment object with certain keys', () => {
         return request(app)
           .post('/api/articles/1/comments')
@@ -177,7 +225,69 @@ describe('/api', () => {
           .send({ username: 'butter_bridge', body: "this is a comment!!!"})
           .expect(400)
           .then(({ body }) => {
-            expect(body).to.eql({ msg: 'psql error: foreign_key_violation' });
+            expect(body).to.eql({ msg: 'psql error 23503: foreign_key_violation' });
+          });
+      });
+      it('GET / - returns 200 and an array of article comment objects', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({ body: { comments }}) => {
+            expect(comments[0]).to.contain.keys(
+              'comment_id',
+              'author',
+              'article_id',
+              'votes',
+              'created_at',
+              'body');
+          });
+      });
+      it('GET /?sort_by=article_id - returns 200 and an array comment objects sorted in article_id order', () => {
+        return request(app)
+          .get('/api/articles/1/comments/?sort_by=article_id')
+          .expect(200)
+          .then(({ body: { comments }}) => {
+            expect(comments[0]).to.contain.keys(
+              'comment_id',
+              'author',
+              'article_id',
+              'votes',
+              'created_at',
+              'body'
+            );
+            expect(comments).to.be.sortedBy('article_id', { descending: true });
+          });
+      });
+      it('GET /?sort_by=article_id&order=desc - returns 200 and an array comment objects sorted in article_id order', () => {
+        return request(app)
+          .get('/api/articles/1/comments/?sort_by=article_id&order=desc')
+          .expect(200)
+          .then(({ body: { comments }}) => {
+            expect(comments).to.be.sortedBy('article_id', { descending: true });
+          });
+      });
+      it('GET / - returns 200 and an array comment objects defaulted to descending order by created_at', () => {
+        return request(app)
+          .get('/api/articles/1/comments')
+          .expect(200)
+          .then(({ body: { comments }}) => {
+            expect(comments).to.be.sortedBy('created_at', { descending: true });
+          });
+      });
+      it('GET / - testing if query sort_by is not correct...', () => {
+        return request(app)
+          .get('/api/articles/1/comments/?sort_by=not_a_key&order=desc')
+          .expect(400)
+          .then(({ body }) => {
+            expect(body).to.eql({ msg: 'psql error 42703: undefined_column'});
+          });
+      });
+      it('GET / - testing if query order is not correct - should return in ascending order by default', () => {
+        return request(app)
+          .get('/api/articles/1/comments/?sort_by=article_id&order=not_asc_or_desc')
+          .expect(200)
+          .then(({ body: { comments } }) => {
+            expect(comments).to.be.sortedBy('article_id', { ascending: true});
           });
       });
     });

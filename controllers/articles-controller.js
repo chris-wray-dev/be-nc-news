@@ -1,5 +1,17 @@
-const { selectArticleById, updateArticleById, insertComment } = require('../models/articles-model');
+const {
+  selectArticles,
+  selectArticleById,
+  updateArticleById,
+  insertComment,
+  selectComments
+} = require('../models/articles-model');
 
+exports.sendArticles = (req, res, next) => {
+  selectArticles(req.query)
+    .then(articles => {
+      res.status(200).send({ articles });
+    })
+}
 exports.sendArticleById = (req, res, next) => {
   selectArticleById(req.params)
     .then(article => {
@@ -20,6 +32,14 @@ exports.postComment = (req, res, next) => {
   insertComment(req.params, req.body)
     .then(comment => {
       res.status(201).send({ comment });
+    })
+    .catch(next);
+}
+
+exports.sendComments = (req, res, next) => {
+  selectComments(req.query)
+    .then(comments => {
+      res.status(200).send(({ comments }));
     })
     .catch(next);
 }
