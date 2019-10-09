@@ -7,6 +7,6 @@ exports.handleCustomErrors = (err, req, res, next) => {
 
 exports.handlePsqlErrors = (err, req, res, next) => {
   if (psqlErrorCodes.hasOwnProperty(err.code)) {
-    res.status(400).send({ msg: psqlErrorCodes[err.code]})
+    res.status(400).send({ msg: `psql error: ${psqlErrorCodes[err.code]}`})
   }
 }

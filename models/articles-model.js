@@ -34,3 +34,16 @@ exports.updateArticleById = ({ article_id }, { inc_votes }) => {
       return article[0];
     });
 }
+
+exports.insertComment = ({ article_id }, { username, body }) => {
+  return connection('comments')
+    .insert({
+      author: username,
+      article_id: article_id,
+      body: body
+    })
+    .returning('*')
+    .then(comment => {
+      return comment[0];
+    });
+}

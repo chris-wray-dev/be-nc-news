@@ -25,6 +25,8 @@ exports.formatComments = (list, referenceObject, key1, key2) => {
   const newList = list.map(object => {
     const newObject = { ...object };
     newObject[key2] = referenceObject[object[key1]];
+    newObject.author = newObject.created_by;
+    delete newObject.created_by;
     delete newObject[key1];
     return newObject;
   });
