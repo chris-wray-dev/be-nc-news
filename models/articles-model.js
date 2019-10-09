@@ -19,6 +19,15 @@ exports.selectArticles = ({ sort_by = 'created_at', order = "desc", author, topi
       if (author) query.where('articles.author', author);
       if (topic) query.where('articles.topic', topic);
     })
+    .then(articles => {
+      if (articles.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `${author || topic} not found!!!`
+        });
+      }
+      return articles;
+    })
 }
 
 exports.selectArticleById = ({ article_id }) => {

@@ -127,6 +127,26 @@ describe('/api', () => {
           });
         });
     });
+    /*
+    ************************* handle article query errors *********************
+    */
+
+   it('GET ?author=not-an-author', () => {
+    return request(app)
+      .get('/api/articles?author=not-an-author')
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).to.eql({ msg: 'not-an-author not found!!!'});
+      });
+    });
+    it('GET ?topic=not-a-topic', () => {
+      return request(app)
+        .get('/api/articles?topic=not-a-topic')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body).to.eql({ msg: 'not-a-topic not found!!!'});
+        });
+    });
 
     /*
     ************************** /articles with params *************************
