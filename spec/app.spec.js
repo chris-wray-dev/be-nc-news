@@ -90,7 +90,7 @@ describe('/api', () => {
           expect(body).to.eql({ msg: 'article 15 not found!!!' });
         });
     });
-    it('PATCH /api/articles/:article_id takes an object of { incVotes: 2 } to return 202 and return the article object with the vote count increased', () => {
+    it('PATCH /:article_id takes an object of { incVotes: 2 } to return 202 and return the article object with the vote count increased', () => {
       return request(app)
         .patch('/api/articles/1')
         .send({ inc_votes : 1 })
@@ -114,6 +114,15 @@ describe('/api', () => {
             topic: 'mitch',
             author: 'butter_bridge',
             created_at: '2018-11-15T12:21:54.171Z' });
+        });
+    });
+    it('PATCH /not-an-article-id to return 404 and a descriptive message', () => {
+      return request(app)
+        .patch('/api/articles/15')
+        .send({ inc_votes : 1 })
+        .expect(404)
+        .then(({ body }) => {
+          expect(body).to.eql({ msg: 'article 15 not found!!!' });
         });
     });
   });

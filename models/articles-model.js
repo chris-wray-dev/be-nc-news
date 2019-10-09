@@ -19,16 +19,18 @@ exports.selectArticleById = ({ article_id }) => {
     });
 }
 
-exports.updateArticleById = ({
-  article_id
-}, {
-  inc_votes
-}) => {
+exports.updateArticleById = ({ article_id }, { inc_votes }) => {
   return connection('articles')
     .where('article_id', article_id)
     .increment('votes', inc_votes)
     .returning('*')
     .then(article => {
+      if (article.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `article ${article_id} not found!!!`
+        });
+      }
       return article[0];
     });
 }
