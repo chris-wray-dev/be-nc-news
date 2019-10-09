@@ -3,7 +3,6 @@ const usersRouter = require('./users-router');
 const articlesRouter = require('./articles-router');
 const apiRouter = require('express').Router();
 
-console.log('in the api router');
 apiRouter.use('/topics', topicsRouter);
 apiRouter.use('/users', usersRouter);
 apiRouter.use('/articles', articlesRouter);

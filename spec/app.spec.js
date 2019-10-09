@@ -90,5 +90,31 @@ describe('/api', () => {
           expect(body).to.eql({ msg: 'article 15 not found!!!' });
         });
     });
+    it('PATCH /api/articles/:article_id takes an object of { incVotes: 2 } to return 202 and return the article object with the vote count increased', () => {
+      return request(app)
+        .patch('/api/articles/1')
+        .send({ inc_votes : 1 })
+        .expect(202)
+        .then(({ body }) => {
+          expect(body).to.be.an('object');
+          expect(body).to.contain.keys('article');
+          expect(body.article).contain.keys(
+            'article_id',
+            'title',
+            'body',
+            'votes',
+            'topic',
+            'author',
+            'created_at'
+          );
+          expect(body.article).to.eql({ article_id: 1,
+            title: 'Living in the shadow of a great man',
+            body: 'I find this existence challenging',
+            votes: 101,
+            topic: 'mitch',
+            author: 'butter_bridge',
+            created_at: '2018-11-15T12:21:54.171Z' });
+        });
+    });
   });
 });
