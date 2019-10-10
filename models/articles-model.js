@@ -30,6 +30,16 @@ exports.selectArticles = ({ sort_by = 'created_at', order = "desc", author, topi
     })
 }
 
+exports.postArticle = (article) => {
+  return connection('articles')
+    .insert(article)
+    .returning('*')
+    .then(article => {
+      return article[0];
+    })
+
+}
+
 exports.selectArticleById = ({ article_id }) => {
   return connection
     .select('articles.*')

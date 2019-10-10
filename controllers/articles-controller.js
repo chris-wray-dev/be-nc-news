@@ -1,5 +1,6 @@
 const {
   selectArticles,
+  postArticle,
   selectArticleById,
   updateArticleById,
   deleteArticleById,
@@ -11,6 +12,14 @@ exports.sendArticles = (req, res, next) => {
   selectArticles(req.query)
     .then(articles => {
       res.status(200).send({ articles });
+    })
+    .catch(next);
+}
+
+exports.publishArticle = (req, res, next) => {
+  postArticle(req.body)
+    .then(article => {
+      res.status(201).send({ article : { ...article, published: true } })
     })
     .catch(next);
 }

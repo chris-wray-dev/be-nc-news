@@ -86,6 +86,33 @@ describe('/api', () => {
           expect(articles).to.be.sortedBy('created_at', { descending: true });
         });
     });
+    it.only('POST / accepts an article object and responds with 201 and the succesfully posted article', () => {
+      return request(app)
+        .post('/api/articles')
+        .send({
+          title: 'this is the title!',
+          body: 'this is the body!!',
+          topic: 'mitch',
+          author: 'butter_bridge'
+        })
+        .expect(201)
+        .then(({ body : { article }}) => {
+          expect(article).to.contain.keys(
+            'article_id',
+            'title',
+            'body',
+            'votes',
+            'topic',
+            'author',
+            'created_at',
+            'published'
+          );
+          expect(article.title).to.equal('this is the title!');
+          expect(article.body).to.equal('this is the body!!');
+          expect(article.topic).to.equal('mitch');
+          expect(article.author).to.equal('butter_bridge');
+        });
+    });
 
     /*
     ********************* /articles with queries *********************
