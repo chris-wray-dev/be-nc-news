@@ -65,6 +65,21 @@ exports.updateArticleById = ({ article_id }, { inc_votes }) => {
     });
 }
 
+exports.deleteArticleById = ({ article_id }) => {
+  return connection('articles')
+    .where('article_id', article_id)
+    .del()
+    .then(articleDeleted => {
+      if (!articleDeleted) {
+        return Promise.reject({
+          status: 404,
+          msg: `article ${article_id} not found!!!`
+        });
+      }
+      return articleDeleted;
+    })
+}
+
 exports.insertComment = ({ article_id }, { username, body }) => {
   return connection('comments')
     .insert({

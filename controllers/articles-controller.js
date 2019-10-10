@@ -2,6 +2,7 @@ const {
   selectArticles,
   selectArticleById,
   updateArticleById,
+  deleteArticleById,
   insertComment,
   selectComments
 } = require('../models/articles-model');
@@ -13,6 +14,7 @@ exports.sendArticles = (req, res, next) => {
     })
     .catch(next);
 }
+
 exports.sendArticleById = (req, res, next) => {
   selectArticleById(req.params)
     .then(article => {
@@ -25,6 +27,14 @@ exports.patchArticleById = (req, res, next) => {
   updateArticleById(req.params, req.body)
     .then(article => {
       res.status(202).send({ article })
+    })
+    .catch(next);
+}
+
+exports.removeArticleById = (req, res, next) => {
+  deleteArticleById(req.params)
+    .then(deleteCount => {
+      res.status(204).send({ msg: `${deleteCount} article deleted` });
     })
     .catch(next);
 }

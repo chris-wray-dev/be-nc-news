@@ -224,6 +224,19 @@ describe('/api', () => {
           expect(body).to.eql({ msg: 'article 15 not found!!!' });
         });
     });
+    it('DELETE /:article_id to return 204 and a descriptive message', () => {
+      return request(app)
+        .delete('/api/articles/1')
+        .expect(204);
+    });
+    it('DELETE /:not_article_id to return 204 and a descriptive message', () => {
+      return request(app)
+        .delete('/api/articles/32')
+        .expect(404)
+        .then(({ body }) => {
+          expect(body).to.eql({ msg: 'article 32 not found!!!'})
+        });
+    });
 
     /*
     *************************** /articles/:id/comments ***************************

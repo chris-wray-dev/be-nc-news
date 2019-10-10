@@ -10,8 +10,8 @@ exports.patchCommentById = (req, res, next) => {
 
 exports.removeCommentById = (req, res, next) => {
   deleteCommentById(req.params)
-    .then(commentsDeletedNo => {
-        res.status(204).send({ msg: `${commentsDeletedNo} comment deleted`});
+    .then(commentsDeleted => {
+        res.status(204).send({ msg: `${commentsDeleted} comment deleted`});
     })
     .catch(next);
 }
