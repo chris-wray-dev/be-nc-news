@@ -11,6 +11,10 @@ apiRouter.get('/', (req, res, next) => {
     else res.status(200).send(data);
   });
 });
+apiRouter.all('/', (req, res, next) => {
+  res.status(405).send({ msg: 'Method not allowed'})
+});
+
 apiRouter.use('/topics', topicsRouter);
 apiRouter.use('/users', usersRouter);
 apiRouter.use('/articles', articlesRouter);
