@@ -370,5 +370,15 @@ describe('/api', () => {
           expect(body.msg).to.equal('comment 123 not found!!!')
         });
     });
+    it('DELETE /:comment_id returns a 204 and deletes the comment', () => {
+      return request(app)
+        .delete('/api/comments/1')
+        .expect(204);
+    });
+    it('DELETE /:not_a_comment_id returns a 404 and a nice message', () => {
+      return request(app)
+        .delete('/api/comments/20')
+        .expect(404);
+    });
   });
 });

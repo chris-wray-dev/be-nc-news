@@ -14,3 +14,18 @@ exports.updateCommentById = ({ comment_id }, { inc_votes }) => {
       return comment[0];
     });
 }
+
+exports.deleteCommentById = ({ comment_id }) => {
+  return connection('comments')
+    .where('comment_id', comment_id)
+    .del()
+    .then(commentsDeleted => {
+      if (!commentsDeleted) {
+        return Promise.reject({
+          status: 404,
+          msg: `comment ${comment_id} not found!!!`
+        });
+      }
+      return commentsDeleted;
+    })
+}
