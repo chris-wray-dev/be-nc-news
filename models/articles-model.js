@@ -78,12 +78,21 @@ exports.insertComment = ({ article_id }, { username, body }) => {
     });
 }
 
-exports.selectComments = ({ sort_by = 'created_at', order = 'desc' }) => {
+exports.selectComments = ({ sort_by = 'created_at', order = 'desc' }, { article_id }) => {
   return connection
     .select('*')
     .from('comments')
     .orderBy(sort_by, order)
+    .modify(query => {
+      if (article_id) query.where('article_id', article_id);
+    })
     .then(comments => {
+      if (comments.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `article ${article_id} not found!!!`
+        });
+      }
       return comments;
     })
 }

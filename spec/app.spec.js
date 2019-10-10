@@ -282,6 +282,14 @@ describe('/api', () => {
               'body');
           });
       });
+      it('GET article_id_not_exist/comments - returns 200 and an array of article comment objects', () => {
+        return request(app)
+          .get('/api/articles/30/comments')
+          .expect(404)
+          .then(({ body }) => {
+            expect(body).to.eql({ msg: 'article 30 not found!!!'});
+          });
+      });
       it('GET /?sort_by=article_id - returns 200 and an array comment objects sorted in article_id order', () => {
         return request(app)
           .get('/api/articles/1/comments/?sort_by=article_id')
