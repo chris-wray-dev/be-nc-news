@@ -29,9 +29,21 @@ exports.selectArticles = ({ sort_by = 'created_at', order = "desc", author, topi
       if (topic) query.where('articles.topic', topic);
     });
 
-  return Promise.all([ articlesQuery, articlesCount ])
-    .then(([articles, articleCount]) => {
-      if (articles.length === 0) {
+  const userQuery = connection
+    .select('*')
+    .from('users')
+    .where('username', author || '');
+  
+  const topicQuery = connection
+    .select('*')
+    .from('topics')
+    .where('slug', topic || '');
+
+  return Promise.all([ articlesQuery, articlesCount, userQuery, topicQuery ])
+    .then(([articles, articleCount, userReponse, topicResponse]) => {
+      if (articles.length === 0 
+        && userReponse.length === 0 
+        && topicResponse.length === 0) {
         return Promise.reject({
           status: 404,
           msg: `${author || topic} not found!!!`
