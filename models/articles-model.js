@@ -1,7 +1,7 @@
 const connection = require('../db/connection');
 
-exports.selectArticles = ({ sort_by = 'created_at', order = "desc", author, topic }) => {
-  return connection
+exports.selectArticles = ({ sort_by = 'created_at', order = "desc", author, topic, limit, p }) => {
+  const articlesQuery = connection
     .select(
       'articles.article_id',
       'articles.title',
@@ -18,16 +18,27 @@ exports.selectArticles = ({ sort_by = 'created_at', order = "desc", author, topi
     .modify(query => {
       if (author) query.where('articles.author', author);
       if (topic) query.where('articles.topic', topic);
-    })
-    .then(articles => {
+      if (limit) query.limit(limit).offset(limit * (p -1));
+    });
+  
+  const articlesCount = connection
+    .select('*')
+    .from('articles')
+    .modify(query => {
+      if (author) query.where('articles.author', author);
+      if (topic) query.where('articles.topic', topic);
+    });
+
+  return Promise.all([ articlesQuery, articlesCount ])
+    .then(([articles, articleCount]) => {
       if (articles.length === 0) {
         return Promise.reject({
           status: 404,
           msg: `${author || topic} not found!!!`
-        });
+        })
       }
-      return articles;
-    })
+      return { articles, results: articleCount.length };
+    });
 }
 
 exports.postArticle = (article) => {

@@ -86,7 +86,7 @@ describe('/api', () => {
           expect(articles).to.be.sortedBy('created_at', { descending: true });
         });
     });
-    it.only('POST / accepts an article object and responds with 201 and the succesfully posted article', () => {
+    it('POST / accepts an article object and responds with 201 and the succesfully posted article', () => {
       return request(app)
         .post('/api/articles')
         .send({
