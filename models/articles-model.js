@@ -49,7 +49,8 @@ exports.selectArticles = ({ sort_by = 'created_at', order = "desc", author, topi
           msg: `${author || topic} not found!!!`
         })
       }
-      return { articles, results: articleCount.length };
+      const resultIndex = `page ${p}, results ${limit * (p - 1) + 1} to ${(limit * p) > articleCount.length ? articleCount.length : (limit * p)} of ${articleCount.length}`;
+      return { articles, results: resultIndex };
     });
 }
 
