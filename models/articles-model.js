@@ -49,7 +49,7 @@ exports.selectArticles = ({ sort_by = 'created_at', order = "desc", author, topi
           msg: `${author || topic} not found!!!`
         })
       }
-      const resultIndex = `page ${p}, results ${limit * (p - 1) + 1} to ${(limit * p) > articleCount.length ? articleCount.length : (limit * p)} of ${articleCount.length}`;
+      const resultIndex = `page ${p}: results ${limit * (p - 1) + 1} to ${(limit * p) > articleCount.length ? articleCount.length : (limit * p)} of ${articleCount.length}`;
       return { articles, results: resultIndex };
     });
 }
@@ -60,8 +60,7 @@ exports.postArticle = (article) => {
     .returning('*')
     .then(article => {
       return article[0];
-    })
-
+    });
 }
 
 exports.selectArticleById = ({ article_id }) => {
@@ -83,7 +82,7 @@ exports.selectArticleById = ({ article_id }) => {
     });
 }
 
-exports.updateArticleById = ({ article_id }, { inc_votes }) => {
+exports.updateArticleById = ({ article_id }, { inc_votes = 0 }) => {
   return connection('articles')
     .where('article_id', article_id)
     .increment('votes', inc_votes)
@@ -128,15 +127,23 @@ exports.insertComment = ({ article_id }, { username, body }) => {
 }
 
 exports.selectComments = ({ sort_by = 'created_at', order = 'desc' }, { article_id }) => {
-  return connection
+
+  const commentsQuery = connection
     .select('*')
     .from('comments')
     .orderBy(sort_by, order)
     .modify(query => {
       if (article_id) query.where('article_id', article_id);
-    })
-    .then(comments => {
-      if (comments.length === 0) {
+    });
+  
+  const articleQuery = connection
+    .select('*')
+    .from('articles')
+    .where('article_id', article_id);
+
+  return Promise.all([ commentsQuery, articleQuery ])
+    .then(([ comments, article ]) => {
+      if (comments.length === 0 && article.length === 0) {
         return Promise.reject({
           status: 404,
           msg: `article ${article_id} not found!!!`
