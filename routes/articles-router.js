@@ -9,24 +9,27 @@ const {
   sendComments
 } = require('../controllers/articles-controller');
 
-articlesRouter.get('/', sendArticles);
-articlesRouter.post('/', publishArticle);
-articlesRouter.all('/', (req, res, next) => {
-  res.status(405).send({ msg: 'Method not allowed'})
-});
+articlesRouter.route('/')
+  .get(sendArticles)
+  .post(publishArticle)
+  .all((req, res, next) => {
+    res.status(405).send({ msg: 'Method not allowed'})
+  });
 
-articlesRouter.get('/:article_id', sendArticleById);
-articlesRouter.patch('/:article_id', patchArticleById);
-articlesRouter.delete('/:article_id', removeArticleById);
-articlesRouter.all('/:article_id', (req, res, next) => {
-  res.status(405).send({ msg: 'Method not allowed'})
-});
+articlesRouter.route('/:article_id')
+  .get(sendArticleById)
+  .patch(patchArticleById)
+  .delete(removeArticleById)
+  .all((req, res, next) => {
+    res.status(405).send({ msg: 'Method not allowed'})
+  });
 
 
-articlesRouter.post('/:article_id/comments', postComment);
-articlesRouter.get('/:article_id/comments', sendComments);
-articlesRouter.all('/:article_id/comments', (req, res, next) => {
-  res.status(405).send({ msg: 'Method not allowed'})
+articlesRouter.route('/:article_id/comments')
+  .post(postComment)
+  .get(sendComments)
+  .all((req, res, next) => {
+    res.status(405).send({ msg: 'Method not allowed'})
 });
 
 module.exports = articlesRouter;

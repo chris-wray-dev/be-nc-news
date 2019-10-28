@@ -130,6 +130,7 @@ Hints:
 - send an unchanged comment when no `inc_votes` is provided in the request body
 
 ---
+***here***
 
 # Post requests (2 failing)
 
@@ -139,7 +140,7 @@ Assertion: expected 201 to equal 400
 
 Hints:
 
-- use a 400: Bad Request status code when `POST` request does not include all the required keys
+<!-- - use a 400: Bad Request status code when `POST` request does not include all the required keys
 - use `notNullable` in migrations for required columns
 
 ### POST `/api/articles/10000/comments`
@@ -150,7 +151,7 @@ Hints:
 
 - use a 404: Not Found _OR_ 422: Unprocessable Entity status code when `POST` contains a valid article ID that does not exist
 
----
+--- -->
 
 # Un-nest arrays when single object requested (1 failing)
 

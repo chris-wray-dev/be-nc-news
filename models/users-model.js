@@ -12,6 +12,6 @@ exports.selectUserByUsername = ({ username }) => {
           msg: `${username} not found!!!`
         });
       }
-      return user;
+      return user[0];
     })
 }
