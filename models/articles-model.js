@@ -49,8 +49,29 @@ exports.selectArticles = ({ sort_by = 'created_at', order = "desc", author, topi
           msg: `${author || topic} not found!!!`
         })
       }
-      const resultIndex = `page ${p}: results ${limit * (p - 1) + 1} to ${(limit * p) > articleCount.length ? articleCount.length : (limit * p)} of ${articleCount.length}`;
-      return { articles, results: resultIndex };
+      //const resultIndex = `page ${p}: results ${limit * (p - 1) + 1} to ${(limit * p) > articleCount.length ? articleCount.length : (limit * p)} of ${articleCount.length}`;
+      
+      const page = parseInt(p);
+      const pages = Math.ceil(articleCount.length / limit);
+      const pageList = [];
+      for (let i = 1; i<= pages; i++) {
+        pageList.push(i);
+      }
+      const from = limit * (p - 1) + 1;
+      const to = limit * p;
+      const total = articleCount.length
+
+      const pagination = {
+        page,
+        from,
+        to,
+        total,
+        pages,
+        pageList
+      }
+
+      //"page 1: results 1 to 10 of 36"
+      return { articles, pagination };
     });
 }
 
