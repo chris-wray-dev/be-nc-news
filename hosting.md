@@ -4,7 +4,7 @@ There are many ways to host applications like the one you have created. One of t
 
 ## 1. Install the Heroku CLI
 
-On macOS:
+On macOS
 
 ```bash
 brew tap heroku/brew && brew install heroku
