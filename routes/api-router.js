@@ -21,35 +21,3 @@ apiRouter.use('/articles', articlesRouter);
 apiRouter.use('/comments', commentsRouter);
 
 module.exports = apiRouter;
-
-/*
-X GET /api/topics
-
-X GET /api/users/:username
-
-GET /api/articles/:article_id
-PATCH /api/articles/:article_id
-
-POST /api/articles/:article_id/comments
-GET /api/articles/:article_id/comments
-
-GET /api/articles
-
-PATCH /api/comments/:comment_id
-DELETE /api/comments/:comment_id
-
-GET /api
-
-/api	/topics	use	/topics
-			
-	    /users	get	/:username
-			
-      /articles	get	/
-                get	/:article_id
-                patch	/:article_id
-                post	/:article_id/comments
-                get	/:article_id/comments
-          
-      /comments	patch	/:comment_id
-                delete	/:comment_id
-*/
