@@ -17,7 +17,7 @@ describe('/api', () => {
   */
 
   describe('/topics', () => {
-    it('GET / returns 200 and an object containing a key of topics and an array of topics objects', () => {
+    it('GET / returns 201 and an object containing a key of topics and an array of topics objects', () => {
       return request(app).get('/api/topics')
         .expect(200)
         .then(topics => {
@@ -36,17 +36,16 @@ describe('/api', () => {
     it('GET /api/users/:username returns 200 and an object containing a key of username and an array of user object', () => {
       return request(app).get('/api/users/butter_bridge')
         .expect(200)
-        .then(user => {
-          expect(user.body).to.be.an('object');
-          expect(user.body).to.contain.keys('user');
-          expect(user.body.user[0]).to.contain.keys('username', 'avatar_url', 'name');
+        .then(({ body: { user } }) => {
+          expect(user).to.be.an('object');
+          expect(user).to.contain.keys('username', 'avatar_url', 'name');
         });
     });
     it('GET /api/users/:username returns 200 and an object containing the requested user details', () => {
       return request(app).get('/api/users/butter_bridge')
         .expect(200)
-        .then(user => {
-          expect(user.body.user[0]).to.eql({
+        .then(({ body: { user } }) => {
+          expect(user).to.eql({
             username: 'butter_bridge',
             name: 'jonny',
             avatar_url: 'https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg'
@@ -220,7 +219,7 @@ describe('/api', () => {
       return request(app)
         .patch('/api/articles/1')
         .send({ inc_votes : -99 })
-        .expect(202)
+        .expect(200)
         .then(({ body }) => {
           expect(body).to.be.an('object');
           expect(body).to.contain.keys('article');
@@ -390,7 +389,7 @@ describe('/api', () => {
       return request(app)
         .patch('/api/comments/1')
         .send({ inc_votes: 1 })
-        .expect(202)
+        .expect(200)
         .then(({ body : { comment }}) => {
           expect(comment).to.contain.keys(
             'comment_id',

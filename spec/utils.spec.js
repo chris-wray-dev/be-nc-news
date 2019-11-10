@@ -226,7 +226,7 @@ describe('formatComments', () => {
     const expected = [{
       body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
       article_id: 1,
-      created_by: 'butter_bridge',
+      author: 'butter_bridge',
       votes: 16,
       created_at: 1511354163389,
     }];
@@ -254,13 +254,13 @@ describe('formatComments', () => {
     const expected = [{
       body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
       article_id: 1,
-      created_by: 'butter_bridge',
+      author: 'butter_bridge',
       votes: 16,
       created_at: 1511354163389,
     }, {
       body: 'The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.',
       article_id: 2,
-      created_by: 'butter_bridge',
+      author: 'butter_bridge',
       votes: 14,
       created_at: 1479818163389,
     }];
